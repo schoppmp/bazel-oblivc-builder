@@ -3,18 +3,27 @@ services:
   - docker:dind
 
 variables:
-  CONTAINER_IMAGE: gitlab.informatik.hu-berlin.de:4567/$CI_PROJECT_PATH
+  REGISTRY: gitlab.informatik.hu-berlin.de:4567
+  CONTAINER_TEST_IMAGE: $REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: $REGISTRY/$CI_PROJECT_PATH:latest
 
 before_script:
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN gitlab.informatik.hu-berlin.de:4567
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $REGISTRY
 
 build:
   stage: build
   script:
-    - docker pull $CONTAINER_IMAGE:latest || true
-    - docker build --cache-from $CONTAINER_IMAGE:latest,base/devel --tag $CONTAINER_IMAGE:$CI_COMMIT_SHA --tag $CONTAINER_IMAGE:latest .
-    - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHA
-    - docker push $CONTAINER_IMAGE:latest
+    - docker pull $CONTAINER_RELEASE_IMAGE || true
+    - docker build --cache-from $CONTAINER_RELEASE_IMAGE,base/devel --tag $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
   tags:
     - dockerimage
 
+push:
+  stage: deploy
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+  only:
+    - master
