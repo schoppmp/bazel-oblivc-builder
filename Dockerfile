@@ -17,5 +17,8 @@ ENV BASH_ENV=/etc/opam.env
 RUN pacman --noconfirm -Syu \
   cmake
 
+# Register remote cache in .bazelrc
+RUN echo "build --remote_http_cache=http://141.20.33.195:9090" >> ~/.bazelrc
+
 # Use Bash as entrpoint so opam.env gets read
 ENTRYPOINT ["/bin/bash", "-c"]
