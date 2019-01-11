@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Set up OPAM environment.
+eval $(opam config env)
+
+# Configure bazel remote cache
+echo "build --remote_http_cache=https://${CACHE_USER}:${CACHE_PASSWORD}@bazel-remote-cache.informatik.hu-berlin.de:9090" >> ~/.bazelrc
+
+# Execute commands
+bash "$@"
