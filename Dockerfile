@@ -19,6 +19,11 @@ RUN pacman --noconfirm -Syu \
 RUN pacman --noconfirm -Syu \
   python python2
 
+# Docker for pushing images.
+# Needed until container_push works (https://github.com/google/containerregistry/issues/42)
+RUN pacman --noconfirm -Syu \
+  docker
+
 # Set up env wrapper and use as entrypoint
 COPY env_wrapper /bin/env_wrapper
 ENTRYPOINT ["/bin/env_wrapper", "-c"]
