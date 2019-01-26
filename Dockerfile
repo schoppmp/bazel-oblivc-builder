@@ -15,6 +15,10 @@ RUN opam init --disable-sandboxing -y --compiler 4.06.0; \
 RUN pacman --noconfirm -Syu \
   cmake
 
+# Python
+RUN pacman --noconfirm -Syu \
+  python python2
+
 # Set up env wrapper and use as entrypoint
 COPY env_wrapper /bin/env_wrapper
 ENTRYPOINT ["/bin/env_wrapper", "-c"]
