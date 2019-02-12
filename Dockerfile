@@ -1,6 +1,10 @@
-FROM base/devel
+FROM archlinux/base
 
-# Bazel and git
+# base-devel group.
+RUN pacman --noconfirm -Syu \
+  base-devel
+
+# Bazel and git.
 RUN pacman --noconfirm -Syu \
   bazel git
 
