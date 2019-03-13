@@ -28,6 +28,11 @@ RUN pacman --noconfirm -Syu \
 RUN pacman --noconfirm -Syu \
   docker
 
+# Boost and OpenSSL.
+# Needed until these can be passed out of Bazel (https://github.com/bazelbuild/rules_foreign_cc/issues/232)
+RUN pacman --noconfirm -Syu \
+  boost boost-libs openssl
+
 # Set up env wrapper and use as entrypoint
 COPY env_wrapper /bin/env_wrapper
 ENTRYPOINT ["/bin/env_wrapper", "-c"]
