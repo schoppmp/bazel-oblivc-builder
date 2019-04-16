@@ -14,7 +14,7 @@ build:
   stage: build
   script:
     - docker pull $CONTAINER_RELEASE_IMAGE || true
-    - docker build --cache-from $CONTAINER_RELEASE_IMAGE,base/devel --tag $CONTAINER_TEST_IMAGE .
+    - docker build --cache-from $CONTAINER_RELEASE_IMAGE,archlinux/base --tag $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
   tags:
     - dockerimage
